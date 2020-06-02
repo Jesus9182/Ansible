@@ -1,0 +1,18 @@
+---
+
+ directa:
+   - {nombre: ejemplo.com, file: ejemplo.com.dns}
+   - {nombre: ejemplo1.com, file: ejemplo1.com.dns}
+ inversa:
+   - {ip: 10.0.0.0, file: 0.0.10.in-addr.arpa.dns}
+   - {ip: 20.0.0.0, file: 0.0.20.in-addr.arpa.dns}
+ hosts:
+   - {nombre_host: equipo1, nombre_zona: ejemplo.com, ip: 10.0.0.1}
+   - {nombre_host: equipo2, nombre_zona: ejemplo.com, ip: 10.0.0.2}
+   - {nombre_host: equipo1, nombre_zona: ejemplo1.com, ip: 20.0.0.1}
+   - {nombre_host: equipo2, nombre_zona: ejemplo1.com, ip: 20.0.0.2}
+ punteros:
+   - {nombre_puntero: 0.0.1, value: equipo1, zona: 10.in-addr.arpa}
+   - {nombre_puntero: 0.0.2, value: equipo2, zona: 10.in-addr.arpa}
+   - {nombre_puntero: 0.0.1, value: equipo1, zona: 20.in-addr.arpa}
+   - {nombre_puntero: 0.0.2, value: equipo2, zona: 20.in-addr.arpa}
