@@ -53,3 +53,22 @@
         $SSLPolicy = @(
                        'ftpServer.security.ssl.controlChannelPolicy',
                        'ftpServer.security.ssl.dataChannelPolicy'
+                       )
+        Set-ItemProperty -Path $FTPSitePath -Name $SSLPolicy[0] -Value $false
+        Set-ItemProperty -Path $FTPSitePath -Name $SSLPolicy[1] -Value $false
+
+        $cuentaUsuario = New-Object System.Security.Principal.NTAccount(""{{nombre_grupo}}"")
+        $AccessRule = [System.Security.AccessControl.FileSystemAccessRule]::new($cuentaUsuario,
+                      'ReadAndExecute',
+                      'ContainerInherit,ObjectInherit',
+                      'None',
+                      'Allow'
+                      )
+        $ACL = Get-Acl -Path "{{ruta}}"
+        $ACL.SetAccessRule($AccessRule)
+        $ACL | Set-Acl -Path "{{ruta}}"
+
+        Restart-WebItem "IIS:\Sites\$FTPSiteName" -Verbose
+
+      with_items:"{{usuarios}}"
+
