@@ -1,0 +1,55 @@
+
+---
+
+- hosts: windows
+
+  vars_files: ftp_vars
+  gather_facts: yes
+  tasks:
+    - name: Instalar FTP
+      win_feature:
+        name: Web-Ftp-Server
+        state: present
+        include_sub_features: yes
+
+        named: Web-Basic-Auth
+        state: present
+
+    - name: crear un nuevo sitio FTP
+      win_shell: New-WebFtpSite -Name "{{nombre_ftp}}" -Port 21 -PhysicalPath "{{ruta}}"
+
+    - name: Crear usuarios FTP
+      win_shell: |
+        $ADSI = [ADSI]"WinNT://$env:ComputerName"
+        $CrearGrupo = $ADSI.Create("Group", ""{{nombre_grupo}}"")
+        $CrearGrupo.SetInfo()
+        $CrearGrupo.description = "{{descripcion_grupo}}"
+        $CrearGrupo.SetInfo()
+        $CrearUsuario = $ADSI.Create("User", ""{{nombre_usuario}}"")
+        $CrearUsuario.SetInfo()
+        $CrearUsuario.SetPassword(""{{contraseña_usuario}}"")
+        $CrearUsuario.SetInfo()
+        $CuentaUsuario = New-Object System.Security.Principal.NTAccount(""{{nombre_usuario}}"")
+        $SID = $CuentaUsuario.Translate([System.Security.Principal.SecurityIdentifier])
+        $Grupo = [ADSI]"WinNT://$env:ComputerName/"{{nombre_grupo}}",Group"
+        $Usuario = [ADSI]"WinNT://$SID"
+        $Grupo.Add($Usuario.Path)
+        $rutaFTP = "IIS:\Sites\"{{nombre_ftp}}""
+        $BasicAuth = 'ftpServer.security.authentication.basicAuthentication.enabled'
+        Set-ItemProperty -Path $rutaFTP -Name $BasicAuth -Value $True
+
+        $Param = @{
+                   Filter   = "/system.ftpServer/security/authorization"
+                   Value    = @{
+                                accessType  = "Allow"
+                                roles       = "$FTPUserGroupName"
+                                permissions = 1
+                                }
+                   PSPath   = 'IIS:\'
+                   Location = $FTPSiteName
+                  }
+        Add-WebConfiguration @param
+
+        $SSLPolicy = @(
+                       'ftpServer.security.ssl.controlChannelPolicy',
+                       'ftpServer.security.ssl.dataChannelPolicy'
