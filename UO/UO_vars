@@ -1,0 +1,15 @@
+---
+ dominio: jq
+
+ dom_ex: local
+
+ equipos: [equipo1, equipo2]
+
+ DNS: jq.local
+
+ UO_PC: computers
+
+ descripcion: Equipos de prueba
+
+ 
+
