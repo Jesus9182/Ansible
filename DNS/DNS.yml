@@ -1,0 +1,26 @@
+---
+
+- hosts: windows
+
+  vars_files: DNS_vars.yml
+  gather_facts: yes
+  tasks:
+    - name: Crear zonas primarias
+      win_shell:
+        Add-DnsServerPrimaryZone -Name "{{item.nombre}}" -ZoneFile "{{item.file}}"
+      with_items: "{{directa}}"
+
+    - name: Crear zonas inversas
+      win_shell:
+        Add-DnsServerPrimaryZone -NetworkId "{{item.ip}}" -ZoneFile "{{item.file}}"
+      with_items: "{{inversa}}"
+
+    - name: Crear registros A
+      win_shell:
+        Add-DnsServerResourceRecordA -Name "{{item.nombre_host}}" -ZoneName "{{item.nombre_zona}}" -AllowUpdateAny -IPv4Address "{{item.ip}}"
+      with_items: "{{hosts}}"
+
+    - name: Crear registros PTR
+      win_shell:
+        Add-DnsServerResourceRecordPtr -Name "'{{item.nombre_puntero}}'" -ZoneName "'{{item.nombre_zona}}'" -PtrDomainName "'{{item.nombre_host}}'" -AllowUpdateAny
+      with_items: "{{punteros}}"
