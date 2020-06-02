@@ -1,0 +1,16 @@
+---
+
+- hosts: windows
+
+  vars_files: UO_vars.yml
+  gather_facts: yes
+  tasks:
+    - name: Añadir equipos
+      win_domain_computer:
+        name: "{{item}}"
+        dns_hostname: "{{DNS}}"
+        ou: "OU= '{{UO_PC}}',DC= '{{dominio}}',DC= '{{dom_ex}}'"
+        description: "{{descripcion}}"
+        enabled: yes
+        state: present
+      with_items: "{{equipos}}"
