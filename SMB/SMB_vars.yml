@@ -1,0 +1,7 @@
+---
+ nombre_recurso: Nuevo
+ descripcion_recurso: Prueba
+ acceso_completo: [usuario1, usuario2]
+ solo_lectura: [usuario3, usuario4]
+ usuarios_denegados: [bob, usuario5]
+ ruta: C:\shares
