@@ -1,0 +1,11 @@
+---
+ nombre_ftp: ftp1
+ ruta: C:\
+ nombre_grupo: ftpgroup1
+ descripcion_grupo: grupo de prueba
+
+
+Usuarios:
+   - {nombre_usuario: usuario1, contraseña_usuario: Admin12345 }
+   - {nombre_usuario: usuario2, contraseña_usuario: Admin12345 }
+
