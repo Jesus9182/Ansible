@@ -1,0 +1,23 @@
+---
+
+- hosts: windows
+
+  vars_files: SMB_vars
+  gather_facts: yes
+  tasks:
+    - name: Instalar SMB
+      win_feature:
+        name: FS-SMB1
+        include_management_tools: yes
+        include_sub_features: yes
+        state: present
+
+    - name: Añadir un recurso compartido
+      win_share:
+        name: "{{nombre_recurso}}"
+        description: "{{descripcion_recurso}}"
+        path: "{{ruta}}"
+        list: no
+        full: "{{acceso_completo}}"
+        read: "{{solo_lectura}}"
+        deny: "{{usuarios_denegados}}"
