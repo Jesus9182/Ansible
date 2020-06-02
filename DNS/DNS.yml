@@ -24,3 +24,4 @@
       win_shell:
         Add-DnsServerResourceRecordPtr -Name "'{{item.nombre_puntero}}'" -ZoneName "'{{item.nombre_zona}}'" -PtrDomainName "'{{item.nombre_host}}'" -AllowUpdateAny
       with_items: "{{punteros}}"
+#
